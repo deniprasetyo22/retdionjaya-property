@@ -1,0 +1,132 @@
+<?php
+
+namespace App\Filament\Resources;
+
+use Filament\Forms;
+use Filament\Tables;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
+use App\Models\CustomerFeedback;
+use Filament\Resources\Resource;
+use Filament\Tables\Actions\ExportAction;
+use Filament\Resources\Components\Tab;
+use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Exports\CustomerFeedbackExporter;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\CustomerFeedbackResource\Pages;
+use App\Filament\Resources\CustomerFeedbackResource\RelationManagers;
+
+class CustomerFeedbackResource extends Resource
+{
+    protected static ?string $model = CustomerFeedback::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-chat-bubble-left-right';
+    protected static ?string $navigationLabel = 'Umpan Balik';
+    protected static ?string $modelLabel = 'Umpan Balik';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                Forms\Components\TextInput::make('name')
+                    ->placeholder('Nama')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('email')
+                    ->placeholder('Email')
+                    ->email()
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('phone')
+                    ->placeholder('Telepon')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\TextInput::make('category')
+                    ->placeholder('Kategori')
+                    ->required()
+                    ->maxLength(255),
+                Forms\Components\Textarea::make('message')
+                    ->placeholder('Pesan')
+                    ->required()
+                    ->rows(5)
+                    ->columnSpanFull(),
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->defaultSort('created_at', 'desc')
+            ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->label('Nama')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('email')
+                    ->label('Email')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('phone')
+                    ->label('Telepon')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('category')
+                    ->label('Kategori')
+                    ->searchable()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('Dibuat Pada')
+                    ->dateTime('d M Y H:i')
+                    ->sortable(),
+            ])
+            ->filters([
+                Tables\Filters\TrashedFilter::make(),
+            ])
+            ->actions([
+                Tables\Actions\ActionGroup::make([
+                    Tables\Actions\ViewAction::make(),
+                    Tables\Actions\DeleteAction::make(),
+                    Tables\Actions\ForceDeleteAction::make(),
+                    Tables\Actions\RestoreAction::make(),
+                ]),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\ForceDeleteBulkAction::make(),
+                    Tables\Actions\RestoreBulkAction::make(),
+                ]),
+            ])
+            ->headerActions([
+                ExportAction::make()
+                    ->icon('heroicon-o-arrow-down-tray')
+                    ->label('Export Data')
+                    ->exporter(CustomerFeedbackExporter::class)
+            ]);;
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => Pages\ListCustomerFeedback::route('/'),
+            'create' => Pages\CreateCustomerFeedback::route('/create'),
+            'view' => Pages\ViewCustomerFeedback::route('/{record}'),
+            'edit' => Pages\EditCustomerFeedback::route('/{record}/edit'),
+        ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        return parent::getEloquentQuery()
+            ->withoutGlobalScopes([
+                SoftDeletingScope::class,
+            ]);
+    }
+}
