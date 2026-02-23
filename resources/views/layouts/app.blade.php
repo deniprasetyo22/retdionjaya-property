@@ -14,7 +14,7 @@
             }
         </style>
 
-        <link rel="icon" href="{{ asset('images/Logo.png') }}">
+        {{-- <link rel="icon" href="{{ asset('images/Logo.png') }}"> --}}
         <script src="https://cdn.jsdelivr.net/npm/flowbite@4.0.1/dist/flowbite.min.js"></script>
 
         <!-- Google tag (gtag.js) -->
