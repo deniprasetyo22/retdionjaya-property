@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\ArticleResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\ArticleResource\RelationManagers;
+use Illuminate\Support\Facades\Storage;
 
 class ArticleResource extends Resource
 {
@@ -50,7 +51,9 @@ class ArticleResource extends Resource
                         ->label('Gambar')
                         ->image()
                         ->directory('article-images')
-                        ->disk('public')
+                        // ->disk('public')
+                        ->disk('r2') // 👈 GANTI INI
+                        ->visibility('public') // 👈 WAJIB UNTUK R2
                         ->required()
                         ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
                         ->minSize(100)
@@ -74,7 +77,7 @@ class ArticleResource extends Resource
                     ->sortable()
                     ->limit(50)
                     ->tooltip(fn($record) => strip_tags($record->title)),
-                Tables\Columns\ImageColumn::make('image')->label('Gambar'),
+                Tables\Columns\ImageColumn::make('image')->label('Gambar')->disk('r2')->visibility('public')->height(60)->width(60),
                 Tables\Columns\TextColumn::make('created_at')
                     ->label('Dibuat Pada')
                     ->dateTime('d M Y H:i')
