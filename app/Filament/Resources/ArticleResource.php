@@ -52,6 +52,12 @@ class ArticleResource extends Resource
                         ->directory('article-images')
                         ->disk('public')
                         ->required()
+                        ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                        ->minSize(100)
+                        ->maxSize(102400)
+                        ->rules([
+                            'mimes:jpg,jpeg,png,webp',
+                        ])
                         ->openable()
                         ->columnSpanFull(),
             ]);

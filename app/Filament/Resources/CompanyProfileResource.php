@@ -71,6 +71,12 @@ class CompanyProfileResource extends Resource
                                 FileUpload::make('image')
                                     ->label('Gambar')
                                     ->image()
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                                    ->minSize(100) // minimal 100 KB
+                                    ->maxSize(102400) // maksimal 5 MB (5120 KB)
+                                    ->rules([
+                                        'mimes:jpg,jpeg,png,webp',
+                                    ])
                                     ->disk('public')
                                     ->directory('achievements'),
                             ])
@@ -91,11 +97,17 @@ class CompanyProfileResource extends Resource
 
                                 RichEditor::make('description')
                                     ->label('Deskripsi')
-                                   ->placeholder('Deskripsi'),
+                                    ->placeholder('Deskripsi'),
 
                                 FileUpload::make('image')
                                     ->label('Gambar')
                                     ->image()
+                                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/webp'])
+                                    ->minSize(100)
+                                    ->maxSize(102400)
+                                    ->rules([
+                                        'mimes:jpg,jpeg,png,webp',
+                                    ])
                                     ->disk('public')
                                     ->directory('portfolio'),
                             ])

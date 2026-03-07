@@ -110,6 +110,11 @@ class ProjectResource extends Resource
                     ->label('Foto dan Video')
                     ->multiple()
                     ->acceptedFileTypes(['image/*', 'video/*'])
+                    ->minSize(100)
+                    ->maxSize(102400)
+                    ->rules([
+                        'mimes:jpg,jpeg,png,webp,mp4,mov,avi,mkv',
+                    ])
                     ->multiple()
                     ->directory('project-media')
                     ->required()
